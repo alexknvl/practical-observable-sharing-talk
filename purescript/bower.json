@@ -14,7 +14,8 @@
     "purescript-foldable-traversable": "^4.1.1",
     "purescript-transformers": "^4.2.0",
     "purescript-maybe": "^4.0.1",
-    "purescript-lazy": "^4.0.0"
+    "purescript-lazy": "^4.0.0",
+    "purescript-matryoshka": "^0.4.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"
