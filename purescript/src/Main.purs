@@ -7,8 +7,8 @@ import Effect.Console (log)
 import Control.Monad.State.Trans
 import Effect.Class (liftEffect)
 
-import Data.Lazy (Lazy, force)
-import Control.Lazy
+import Data.Lazy (Lazy, force, defer)
+import Control.Lazy (fix)
 import Data.Maybe
 import Data.Tuple
 import Data.Traversable
@@ -69,22 +69,49 @@ fromGraph' :: forall t f. Partial => Recursive t f => Traversable f => Graph f -
 fromGraph' (Graph m) i = case HM.lookup i m of
   Just fa -> embed (fromGraph' (Graph m) <$> fa)
 
--- data Node = Delay (Lazy Node) | Not Node
+data Node = Delay (Lazy Node) | Not Node
 
--- data NodeF a = DelayF a | NotF a
+data NodeF a = DelayF a | NotF a
 
--- derive instance nodeFunctor :: Functor NodeF
--- -- derive instance Foldable, Traversable)
+derive instance nodeFunctor :: Functor NodeF
 
--- instance nodeRecursive :: Recursive Node NodeF where
---   embed (DelayF a) = Delay (defer $ \_ -> a)
---   embed (NotF a)   = Not a
+instance nodeShow :: Show a => Show (NodeF a) where
+  show (DelayF a) = "DelayF(" <> show a <> ")"
+  show (NotF a)   = "NotF(" <> show a <> ")"
 
---   project (Delay a) = DelayF (force a)
---   project (Not a)   = NotF a
+instance nodeFoldable :: Foldable NodeF where
+  foldr   :: forall a b. (a -> b -> b) -> b -> NodeF a -> b
+  foldr f z (DelayF a) = f a z
+  foldr f z (NotF a)   = f a z
 
--- network = fix \n -> Not $ Delay (defer $ \_ -> n)
+  foldl   :: forall a b. (b -> a -> b) -> b -> NodeF a -> b
+  foldl f z (DelayF a) = f z a
+  foldl f z (NotF a)   = f z a
+
+  foldMap :: forall a m. Monoid m => (a -> m) -> NodeF a -> m
+  foldMap f (DelayF a) = f a
+  foldMap f (NotF a)   = f a
+
+instance nodeTraversable :: Traversable NodeF where
+  traverse :: forall a b m. Applicative m => (a -> m b) -> NodeF a -> m (NodeF b)
+  traverse f (DelayF a) = DelayF <$> f a
+  traverse f (NotF a)   = NotF   <$> f a
+
+  sequence :: forall a m. Applicative m => NodeF (m a) -> m (NodeF a)
+  sequence (DelayF a) = DelayF <$> a
+  sequence (NotF a)   = NotF   <$> a
+
+instance nodeRecursive :: Recursive Node NodeF where
+  embed (DelayF a) = Delay (defer $ \_ -> a)
+  embed (NotF a)   = Not a
+
+  project (Delay a) = DelayF (force a)
+  project (Not a)   = NotF a
+
+network :: Node
+network = force $ fix \n -> defer \_ -> Not $ Delay n
 
 main :: Effect Unit
 main = do
-  log "Hello sailor!"
+  (Graph g) <- toGraph network
+  log $ show g

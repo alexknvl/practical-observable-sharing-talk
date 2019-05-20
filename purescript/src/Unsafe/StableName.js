@@ -5,8 +5,10 @@
 var id = 0;
 const wm = new WeakMap();
 
-exports.unsafeNameEq = function (x, y) {
-  return x === y;
+exports.unsafeNameEq = function (x) {
+  return function(y) {
+    return x === y;
+  };
 };
 
 exports.unsafeNameHash = function (x) {
@@ -14,8 +16,10 @@ exports.unsafeNameHash = function (x) {
 };
 
 exports.makeStableName = function (x) {
-  if (x in wm) return x;
-  wm[x] = id + 1;
-  id = id + 1;
-  return x;
+  return function () {
+    if (x in wm) return x;
+    wm[x] = id + 1;
+    id = id + 1;
+    return x;
+  };
 };
