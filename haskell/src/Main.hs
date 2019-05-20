@@ -26,8 +26,16 @@ import Control.Monad.State.Strict (StateT, runStateT, get, put, modify)
 import Control.Monad.IO.Class
 import Data.Hashable (Hashable, hashWithSalt, hash)
 
-import Tracer
+-- Stable names
+newtype Name a = Name (StableName a)
 
+instance Eq (Name a) where
+  (Name x) == (Name y) = x == y
+
+instance Hashable (Name a) where
+  hashWithSalt salt (Name x) = hashWithSalt salt (hashStableName x)
+
+-- Recursive
 class Functor f => Recursive t f | t -> f where
   embed   :: f t -> t
   project :: t -> f t
@@ -36,17 +44,8 @@ class Functor f => Recursive t f | t -> f where
   cata phi = go where
     go = phi . fmap go . project
 
-  -- project = cata (fmap embed)
-
+-- Graph representation
 newtype Graph f = Graph (M.Map Integer (f Integer))
-
-newtype Name a = Name (StableName a)
-
-instance Eq (Name a) where
-  (Name x) == (Name y) = x == y
-
-instance Hashable (Name a) where
-  hashWithSalt salt (Name x) = hashWithSalt salt (hashStableName x)
 
 data State t f = State {
   size  :: Integer,
