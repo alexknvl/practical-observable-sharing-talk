@@ -13,7 +13,8 @@
     "purescript-unordered-collections": "^1.8.0",
     "purescript-foldable-traversable": "^4.1.1",
     "purescript-transformers": "^4.2.0",
-    "purescript-maybe": "^4.0.1"
+    "purescript-maybe": "^4.0.1",
+    "purescript-lazy": "^4.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0"
