@@ -11,6 +11,25 @@ category:            Web
 extra-source-files:
 - README.md
 
+default-extensions:
+  - ExistentialQuantification
+  - ConstraintKinds
+  - KindSignatures
+  - RankNTypes
+  - ScopedTypeVariables
+  - DeriveFunctor
+  - DeriveTraversable
+  - BangPatterns
+  - FunctionalDependencies
+  - InstanceSigs
+  - StandaloneDeriving
+  - ImpredicativeTypes
+  - FlexibleInstances
+  - FlexibleContexts
+  - LambdaCase
+  - TypeFamilies
+  - TupleSections
+
 dependencies:
   - base >= 4.7 && < 5
   - containers
@@ -19,6 +38,7 @@ dependencies:
   - profunctors
   - hashable
   - ghc-heap
+  - recursion-schemes
 
 executables:
   Mijo:
