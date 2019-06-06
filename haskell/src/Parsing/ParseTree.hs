@@ -1,4 +1,4 @@
-module ParseTree where
+module Parsing.ParseTree where
 
 import Prelude hiding (any, seq)
 import qualified Data.List.NonEmpty as NE
@@ -6,7 +6,7 @@ import Data.List.NonEmpty (NonEmpty(..))
 import Data.Functor ((<&>))
 import Control.Monad.State.Lazy
 
-import Parsing
+import Parsing.Parsing
 
 data ParseTree s = Leaf s | Unnamed (NonEmpty (ParseTree s)) | Named String (NonEmpty (ParseTree s))
 

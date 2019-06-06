@@ -1,12 +1,12 @@
-name:                Mijo
+name:                SharingIsCaring
 version:             0.1.0.0
 #synopsis:
 #description:
-homepage:            https://github.com/githubuser/Mijo#readme
+homepage:            https://github.com/alexknvl/practical-observable-sharing
 license:             BSD3
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2019 Author name here
+author:              Alexander Konovalov
+maintainer:          alex.knvl@gmail.com
+copyright:           2019 Alexander Konovalov
 category:            Web
 extra-source-files:
 - README.md
@@ -41,6 +41,6 @@ dependencies:
   - recursion-schemes
 
 executables:
-  Mijo:
+  SharingIsCaring:
     source-dirs:      src
     main:             Main.hs

@@ -4,32 +4,38 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 95bbc83be0290e23b84046b70783363f22cf785a8a60f7b1db40f31cbb2b9a4e
+-- hash: 0ec74414b685ae882bffddc7ce6966eea8354e79d05780060f233fc8d377057c
 
-name:           Mijo
+name:           SharingIsCaring
 version:        0.1.0.0
 category:       Web
-homepage:       https://github.com/githubuser/Mijo#readme
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2019 Author name here
+homepage:       https://github.com/alexknvl/practical-observable-sharing
+author:         Alexander Konovalov
+maintainer:     alex.knvl@gmail.com
+copyright:      2019 Alexander Konovalov
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
 
-executable Mijo
+executable SharingIsCaring
   main-is: Main.hs
   other-modules:
-      CFG
-      Network
-      ParseTree
-      Parsing
+      Circuits.Network
+      Parsing.CFG
+      Parsing.ParseTree
+      Parsing.Parsing
+      Parsing.SimpleLang
+      Parsing.SimpleParser
       Reification
-      SimpleParser
-      Tracer
-      Paths_Mijo
+      Slides.Example1_CFG
+      Slides.Example2_Signal
+      Slides.Example3_CFG
+      Slides.Example4_MagicGraphs
+      Slides.RecursiveDo
+      Slides.RefEq_bad
+      Paths_SharingIsCaring
   hs-source-dirs:
       src
   default-extensions: ExistentialQuantification ConstraintKinds KindSignatures RankNTypes ScopedTypeVariables DeriveFunctor DeriveTraversable BangPatterns FunctionalDependencies InstanceSigs StandaloneDeriving ImpredicativeTypes FlexibleInstances FlexibleContexts LambdaCase TypeFamilies TupleSections

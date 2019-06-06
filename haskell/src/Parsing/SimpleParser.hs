@@ -1,8 +1,10 @@
-module SimpleParser where
+module Parsing.SimpleParser where
 
-import Parsing (Parsing(..), Iso(..))
+import Parsing.Parsing (Parsing(..), Iso(..))
 
-newtype Simple s a = Simple ([s] -> [([s], a)])
+newtype Simple s a = Simple {
+    runSimpleParser :: [s] -> [([s], a)]
+}
 
 deriving instance Functor (Simple s)
 

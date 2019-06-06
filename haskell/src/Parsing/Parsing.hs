@@ -1,4 +1,4 @@
-module Parsing where
+module Parsing.Parsing where
 
 import qualified Prelude as P
 import Prelude (Either(..), Maybe(..), Bool(..), String, Semigroup(..))
@@ -15,8 +15,20 @@ eitherIso = Iso (\case Left () -> Nothing; Right a -> Just a) (\case Nothing -> 
 boolIso :: Iso (Either () ()) Bool
 boolIso = Iso (\case Left () -> False; Right () -> True) (\case False -> Left (); True -> Right ())
 
-listIso :: Iso (Either () (a, [a])) [a]
-listIso = Iso (\case Left () -> []; Right (h, t) -> h : t) (\case [] -> Left (); h : t -> Right (h, t))
+-- listIso :: Iso (Either () (a, [a])) [a]
+-- listIso = Iso (\case Left () -> []; Right (h, t) -> h : t) (\case [] -> Left (); h : t -> Right (h, t))
+
+listIso :: Iso (Either () (NonEmpty a)) [a]
+listIso = Iso (\case Left ()      -> [];
+                     Right (h :| t) -> h : t)
+              (\case []    -> Left ();
+                     h : t -> Right (h :| t))
+
+
+nelIso :: Iso (a, [a]) (NonEmpty a)
+nelIso = Iso (\(h, t) -> h :| t)
+             (\(h :| t) -> (h, t))
+
 
 -- Parsing
 
@@ -44,6 +56,16 @@ seql a b = imap (Iso P.fst (,())) (a `seq` b)
 seqr :: Parsing p s => p () -> p a -> p a
 seqr a b = imap (Iso P.snd ((),)) (a `seq` b)
 
+-- many :: Parsing p s => p a -> p [a]
+-- many p = r where
+--     r = imap listIso (unit `alt` (p `seq` r))
+
 many :: Parsing p s => p a -> p [a]
-many p = r where
-    r = imap listIso (unit `alt` (p `seq` r))
+many p = m where
+    m = imap listIso (unit `alt` m1)
+    m1 = imap nelIso (p `seq` m)
+
+many1 :: Parsing p s => p a -> p (NonEmpty a)
+many1 p = m1 where
+    m = imap listIso (unit `alt` m1)
+    m1 = imap nelIso (p `seq` m)
